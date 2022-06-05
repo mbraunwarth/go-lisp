@@ -60,17 +60,22 @@ func main() {
 			col = col + len(id) - 1
 			fmt.Println(tok)
 		case r == ';':
-			// TODO: only comments left for lexing
 			// really a comment
-			//next, err := bufR.ReadRune()
-			//if err != nil {
-			//	// blabla
-			//	break
-			//}
+			next, _, err := bufR.ReadRune()
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
 
-			//if next == ';' {
-			//	lexComment(bufR)
-			//}
+			if next != ';' {
+				fmt.Println("Unexpected token " + string(r))
+				os.Exit(1)
+			}
+
+			val := lexComment(bufR)
+			tok := makeToken(line, col, Comment, val)
+
+			fmt.Println(tok)
 		case unicode.IsNumber(r):
 			// int vs float
 			i, frac := lexNum(r, bufR) // i and frac are returned as strings
@@ -100,6 +105,30 @@ func main() {
 		}
 		col = col + 1
 	}
+}
+
+func lexComment(bufR *bufio.Reader) string {
+	var sb strings.Builder
+
+	sb.WriteString(";;")
+
+	for {
+		next, _, err := bufR.ReadRune()
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+
+		if next == '\n' {
+			// unread newline character as this is needed to reset column counter
+			bufR.UnreadRune()
+			break
+		}
+
+		sb.WriteRune(next)
+	}
+
+	return sb.String()
 }
 
 func lexID(r rune, bufR *bufio.Reader) string {
