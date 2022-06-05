@@ -1,20 +1,20 @@
-package main
+package lexer
 
 import "fmt"
 
-type token struct {
-	line  int
-	col   int
-	typ   tokenType
-	value string
+type Token struct {
+	Line  int
+	Col   int
+	Typ   tokenType
+	Value string
 }
 
-func (t token) String() string {
-	return fmt.Sprintf("token{%d, %d, %s, '%s'}", t.line, t.col, t.typ, t.value)
+func (t Token) String() string {
+	return fmt.Sprintf("token{%d, %d, %s, '%s'}", t.Line, t.Col, t.Typ, t.Value)
 }
 
-func makeToken(line, col int, typ tokenType, value string) token {
-	return token{line, col, typ, value}
+func makeToken(line, col int, typ tokenType, value string) Token {
+	return Token{line, col, typ, value}
 }
 
 type tokenType int
