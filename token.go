@@ -10,7 +10,7 @@ type token struct {
 }
 
 func (t token) String() string {
-	return fmt.Sprintf("token{%d, %d, %s, '%s'", t.line, t.col, t.typ, t.value)
+	return fmt.Sprintf("token{%d, %d, %s, '%s'}", t.line, t.col, t.typ, t.value)
 }
 
 func makeToken(line, col int, typ tokenType, value string) token {
